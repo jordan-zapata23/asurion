@@ -1,0 +1,22 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/claims/dashboard">Home</a> &rsaquo; Work Queue</div>
+<h1>Work Queue</h1>
+<div class="panel">
+  <div class="ph">Actions</div>
+  <div class="pb"><a href="/claims/new" class="btn primary" id="new-claim-btn" aria-label="New Claim">+ New Claim</a> <a href="#" class="btn disabled">Claim Search</a> <a href="#" class="btn disabled">Bulk Upload</a></div>
+</div>
+<div class="panel">
+  <div class="ph">Claims Filed This Session <span class="hint"><%= recent.length %> shown</span></div>
+  <div class="pb">
+    <% if (!recent.length) { %><div class="hint">No claims filed yet in this session.</div><% } else { %>
+    <table class="grid" id="recent-claims">
+      <tr><th>Claim #</th><th>Filed</th><th>Subscriber</th><th>Carrier</th><th>Loss Type</th><th>Status</th><th class="num">Deductible</th><th>Filed By</th></tr>
+      <% recent.forEach(c => { %>
+      <tr><td class="mono"><a href="/claims/confirmation/<%= c.claimNumber %>"><%= c.claimNumber %></a></td><td><%= lib.fmtTs(c.filedAt) %></td><td><%= c.subscriberName %></td><td><%= c.carrier %></td><td><%= c.lossType %></td>
+          <td><span class="pill <%= c.status === 'Approved' ? 'ok' : 'warn' %>"><%= c.status %></span></td><td class="num"><%= lib.money(c.deductibleDue) %></td><td><%= c.filedBy %></td></tr>
+      <% }) %>
+    </table>
+    <% } %>
+  </div>
+</div>
+<%- include('../partials/foot') %>

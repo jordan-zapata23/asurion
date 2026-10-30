@@ -1,0 +1,24 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/enrollment/search">Home</a> &rsaquo; Subscriber Search</div>
+<h1>Subscriber Search</h1>
+<div class="panel">
+  <div class="ph">Search Criteria</div>
+  <div class="pb">
+    <% if (error) { %><div class="msg error" id="search-error" role="alert"><%= error %></div><% } %>
+    <form class="legacy" method="post" action="/enrollment/search" id="subscriber-search-form">
+      <table class="form">
+        <tr><td class="lbl"><label for="mobile_number">Mobile Number <span class="req">*</span></label></td>
+            <td><input type="tel" id="mobile_number" name="mobile_number" value="<%= mobile_number %>" placeholder="(615) 555-0100" aria-label="Mobile Number" autofocus>
+                <div class="hint">10-digit MDN. Dashes and parentheses are ignored.</div></td></tr>
+        <tr><td class="lbl"><label for="account_number">Account Number</label></td><td><input type="text" id="account_number" name="account_number" aria-label="Account Number" disabled placeholder="Not available in this view"></td></tr>
+        <tr><td class="lbl"><label for="last_name">Last Name</label></td><td><input type="text" id="last_name" name="last_name" aria-label="Last Name" disabled placeholder="Not available in this view"></td></tr>
+        <tr><td></td><td><button type="submit" class="primary" id="search-submit" name="search-submit" aria-label="Search">Search</button> <button type="reset" id="search-reset">Clear</button></td></tr>
+      </table>
+    </form>
+  </div>
+</div>
+<div class="panel">
+  <div class="ph">Recently Viewed</div>
+  <div class="pb hint">No recently viewed subscribers in this session.</div>
+</div>
+<%- include('../partials/foot') %>

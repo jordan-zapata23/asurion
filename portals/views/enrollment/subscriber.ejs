@@ -1,0 +1,76 @@
+<%- include('../partials/head') %>
+<% const statusClass = sub.status === 'Active' ? 'ok' : (sub.status === 'Not Enrolled' ? 'bad' : 'warn');
+   const remaining = plan ? Math.max(0, plan.claimLimit - claims12.length) : 0; %>
+<div class="crumbs"><a href="/enrollment/search">Home</a> &rsaquo; <a href="/enrollment/search">Subscriber Search</a> &rsaquo; <%= sub.id %></div>
+<h1>Subscriber Detail &mdash; <span id="sub-id" class="mono"><%= sub.id %></span></h1>
+
+<% if (sub.status !== 'Active') { %><div class="msg warn" id="status-banner">Enrollment status is <b><%= sub.status %></b>. This subscriber is <b>not eligible</b> to file a device protection claim.<% if (sub.notes) { %> <%= sub.notes %><% } %></div>
+<% } else if (plan && remaining === 0) { %><div class="msg warn" id="status-banner">Claim limit reached: <b><%= claims12.length %> of <%= plan.claimLimit %></b> claims used in the rolling 12-month period. New claims require supervisor review.</div>
+<% } %>
+
+<div class="cols">
+  <div class="panel" id="overview-panel">
+    <div class="ph">Overview</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Subscriber Name</th><td id="sub-name"><%= sub.name %></td></tr>
+        <tr><th>Mobile Number</th><td id="sub-mobile" class="mono"><%= lib.fmtPhone(sub.mobile) %></td></tr>
+        <tr><th>Carrier</th><td id="sub-carrier"><%= sub.carrier %></td></tr>
+        <tr><th>Protection Plan</th><td id="sub-plan"><%= sub.plan || 'None' %></td></tr>
+        <tr><th>Enrollment Status</th><td><span class="pill <%= statusClass %>" id="sub-status"><%= sub.status %></span></td></tr>
+        <tr><th>Enrolled Since</th><td id="sub-enrolled-since"><%= sub.enrolledSince || '—' %></td></tr>
+        <tr><th>Service Address</th><td id="sub-address"><%= sub.address %></td></tr>
+        <tr><th>Account PIN (last 4)</th><td id="sub-pin-last4" class="mono">&bull;&bull;<%= sub.pinLast4.slice(2) %> <span class="hint">(masked)</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel" id="device-panel">
+    <div class="ph">Enrolled Device</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Make</th><td id="dev-make"><%= sub.device.make %></td></tr>
+        <tr><th>Model</th><td id="dev-model"><%= sub.device.model %></td></tr>
+        <tr><th>IMEI</th><td id="dev-imei" class="mono"><%= sub.device.imei %></td></tr>
+        <tr><th>Color / Storage</th><td id="dev-color"><%= sub.device.color %> / <%= sub.device.storage %></td></tr>
+        <tr><th>Device Status</th><td><span class="pill muted">Active on network</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cols">
+  <div class="panel" id="coverage-panel">
+    <div class="ph">Coverage &amp; Deductibles</div>
+    <div class="pb">
+      <% if (plan) { %>
+      <table class="grid" id="deductible-table">
+        <tr><th>Loss Type</th><th class="num">Deductible</th><th>Fulfillment</th></tr>
+        <% Object.entries(plan.deductibles).forEach(([lt, amt]) => { %>
+        <tr data-loss-type="<%= lt %>"><td class="loss-type"><%= lt %></td><td class="num deductible" data-amount="<%= amt %>"><%= lib.money(amt) %></td>
+            <td class="hint"><%= lt === 'Cracked Screen' ? 'Same-day in-store repair where available' : (lt === 'Malfunction' ? 'Replacement after warranty' : 'Replacement device, next-day shipping') %></td></tr>
+        <% }) %>
+      </table>
+      <table class="kv" style="margin-top:8px">
+        <tr><th>Claims allowed (rolling 12 mo)</th><td id="claim-limit"><%= plan.claimLimit %></td></tr>
+        <tr><th>Claims used (rolling 12 mo)</th><td id="claims-12mo-count"><%= claims12.length %></td></tr>
+        <tr><th>Claims remaining</th><td id="claims-remaining"><b><%= remaining %></b></td></tr>
+      </table>
+      <% } else { %><div class="hint" id="no-coverage">No protection plan on file.</div><% } %>
+    </div>
+  </div>
+  <div class="panel" id="claims-panel">
+    <div class="ph">Claim History (last 12 months)</div>
+    <div class="pb">
+      <% if (claims12.length) { %>
+      <table class="grid" id="claims-table">
+        <tr><th>Claim #</th><th>Date</th><th>Loss Type</th><th>Status</th><th class="num">Deductible</th></tr>
+        <% claims12.forEach(c => { %>
+        <tr class="claim-row"><td class="mono claim-number"><%= c.claimNumber %></td><td class="claim-date"><%= c.date %></td><td class="claim-loss-type"><%= c.lossType %></td><td class="claim-status"><%= c.status %></td><td class="num"><%= lib.money(c.deductible) %></td></tr>
+        <% }) %>
+      </table>
+      <% } else { %><div class="hint" id="no-claims">No claims in the last 12 months.</div><% } %>
+    </div>
+  </div>
+</div>
+<p><a href="/enrollment/search" class="btn" id="new-search">&laquo; New Search</a></p>
+<%- include('../partials/foot') %>

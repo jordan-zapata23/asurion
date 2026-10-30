@@ -1,0 +1,42 @@
+<%- include('partials/head', { pageTitle: 'Portal Gateway' }) %>
+<h1>Enterprise Portal Gateway</h1>
+<div class="msg info">Demo environment for the Decagon Browser Actions walkthrough. Every portal uses a username/password service account, renders server-side, and opens no new tabs or popups. All subscriber, claim, and store data is fictional.</div>
+<div class="index-cards">
+  <% Object.values(portals).forEach(p => { %>
+  <div class="panel">
+    <div class="ph"><%= p.name %> <span class="hint"><%= p.version %></span></div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Entry point</th><td><a href="/<%= p.key %>/login" id="open-<%= p.key %>">/<%= p.key %>/login</a></td></tr>
+        <tr><th>Service account</th><td class="mono"><%= p.user %></td></tr>
+        <tr><th>Password</th><td class="mono"><%= p.pass %></td></tr>
+      </table>
+    </div>
+  </div>
+  <% }) %>
+  <div class="panel">
+    <div class="ph">Back Office Administration <span class="hint">v1.9.3</span></div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Activity log</th><td><a href="/admin/activity" id="open-admin">/admin/activity</a></td></tr>
+        <tr><th>Reset demo data</th><td><form method="post" action="/admin/reset" style="display:inline"><button type="submit" id="reset-demo">Reset to seed state</button></form></td></tr>
+        <tr><th>Health</th><td><a href="/healthz">/healthz</a></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<h2>Seeded test subscribers</h2>
+<table class="grid" id="seed-table">
+  <tr><th>Mobile</th><th>PIN last 4</th><th>Name</th><th>Carrier</th><th>Plan</th><th>Status</th><th>Device</th><th>IMEI</th><th>Claims (12 mo)</th><th>Scenario</th></tr>
+  <% const scen = { '6155550101': 'HAPPY PATH', '6155550102': 'At claim limit (2 of 2)', '6155550103': 'Not enrolled', '6155550104': 'Device mismatch (customer says iPhone)', '6155550109': 'Lapsed enrollment' };
+     state.subscribers.forEach(s => { %>
+  <tr>
+    <td class="mono"><%= lib.fmtPhone(s.mobile) %></td><td class="mono"><%= s.pinLast4 %></td><td><%= s.name %></td><td><%= s.carrier %></td><td><%= s.plan || '—' %></td>
+    <td><%= s.status %></td><td><%= s.device.make %> <%= s.device.model %></td><td class="mono"><%= s.device.imei %></td><td class="num"><%= s.claims.length %></td>
+    <td><b><%= scen[s.mobile] || '' %></b></td>
+  </tr>
+  <% }) %>
+</table>
+<p class="hint">Demo ZIP for the scheduler: <b>37203</b> (Nashville). Hero device: <b>iPhone 15 Pro</b>. Stores without iPhone 15 Pro screen parts: Midtown, Downtown, East Nashville, Madison.</p>
+<%- include('partials/foot') %>

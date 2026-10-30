@@ -1,0 +1,44 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/scheduler/search">Home</a> &rsaquo; <a href="/scheduler/results?zip=<%= zip %>&device_model=<%= encodeURIComponent(model) %>&repair_type=<%= encodeURIComponent(repair_type) %>">Results</a> &rsaquo; Book</div>
+<h1>Book Appointment</h1>
+<div class="cols">
+  <div class="panel" style="flex:0 0 340px">
+    <div class="ph">Location</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Store</th><td id="book-store-name"><b><%= store.name %></b></td></tr>
+        <tr><th>Address</th><td id="book-store-address"><%= store.address %></td></tr>
+        <tr><th>Phone</th><td><%= store.phone %></td></tr>
+        <tr><th>Distance</th><td><%= store.distanceMi.toFixed(1) %> mi from <%= zip %></td></tr>
+        <tr><th>Service</th><td id="book-service"><%= repair_type %> &mdash; <%= model %></td></tr>
+        <tr><th>Est. Duration</th><td>60&ndash;90 minutes</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph">Appointment Details</div>
+    <div class="pb">
+      <% if (error) { %><div class="msg error" id="book-error" role="alert"><%= error %></div><% } %>
+      <form class="legacy" method="post" action="/scheduler/book" id="booking-form">
+        <input type="hidden" name="store_id" value="<%= store.id %>">
+        <input type="hidden" name="device_model" value="<%= model %>">
+        <input type="hidden" name="repair_type" value="<%= repair_type %>">
+        <input type="hidden" name="zip" value="<%= zip %>">
+        <table class="form">
+          <tr><td class="lbl"><label for="slot">Time Slot <span class="req">*</span></label></td>
+              <td><select id="slot" name="slot" aria-label="Time Slot" required>
+                    <% slots.forEach(s => { %><option value="<%= s.value %>" <%= form.slot === s.value ? 'selected' : '' %>><%= s.label %></option><% }) %>
+                  </select></td></tr>
+          <tr><td class="lbl"><label for="claim_number">Claim # <span class="req">*</span></label></td>
+              <td><input type="text" id="claim_number" name="claim_number" value="<%= form.claim_number %>" aria-label="Claim Number" placeholder="CLM-YYYY-NNNNNNN"></td></tr>
+          <tr><td class="lbl"><label for="customer_name">Customer Name <span class="req">*</span></label></td>
+              <td><input type="text" id="customer_name" name="customer_name" value="<%= form.customer_name %>" aria-label="Customer Name"></td></tr>
+          <tr><td class="lbl"><label for="notes">Notes to Store</label></td>
+              <td><input type="text" id="notes" name="notes" aria-label="Notes to Store" placeholder="Optional"></td></tr>
+          <tr><td></td><td><button type="submit" class="primary" id="book-submit" name="book-submit" aria-label="Confirm Booking">Confirm Booking</button> <a href="javascript:history.back()" class="btn">&laquo; Back</a></td></tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/foot') %>

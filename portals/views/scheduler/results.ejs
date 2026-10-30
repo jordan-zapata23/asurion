@@ -1,0 +1,25 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/scheduler/search">Home</a> &rsaquo; <a href="/scheduler/search">Find Repair Location</a> &rsaquo; Results</div>
+<h1>Available Locations</h1>
+<div class="msg info" id="search-summary">Showing <b><%= rows.length %></b> locations within 25 miles of <b id="result-zip"><%= zip %></b> for <b id="result-model"><%= model %></b> &mdash; <b id="result-repair-type"><%= repair_type %></b>. Sorted by distance. Locations without parts in stock cannot be booked for same-day service.</div>
+<div class="panel">
+  <div class="ph">Results <span class="tools"><a href="/scheduler/search">Modify search</a></span></div>
+  <div class="pb">
+    <table class="grid" id="results-table">
+      <tr><th>#</th><th>Store</th><th>Address</th><th class="num">Distance</th><th>Next Available</th><th>Parts In Stock</th><th>Open Slots</th><th>Action</th></tr>
+      <% rows.forEach((r, i) => { const s = r.store; const q = `store=${s.id}&zip=${zip}&device_model=${encodeURIComponent(model)}&repair_type=${encodeURIComponent(repair_type)}`; %>
+      <tr data-store-id="<%= s.id %>" data-parts-in-stock="<%= r.parts ? 'Y' : 'N' %>" class="store-row">
+        <td class="num"><%= i + 1 %></td>
+        <td class="store-name"><b><%= s.name %></b><br><span class="hint mono"><%= s.id %> &middot; <%= s.phone %></span></td>
+        <td class="store-address"><%= s.address %></td>
+        <td class="num distance"><%= s.distanceMi.toFixed(1) %> mi</td>
+        <td class="next-slot"><%= r.slots.length ? r.slots[0].label : 'None' %></td>
+        <td class="parts-in-stock"><span class="pill <%= r.parts ? 'ok' : 'bad' %>"><%= r.parts ? 'Y' : 'N' %></span></td>
+        <td class="num slot-count"><%= r.slots.length %></td>
+        <td><% if (r.parts && r.slots.length) { %><a href="/scheduler/book?<%= q %>" class="btn primary select-store" id="select-store-<%= s.id %>" aria-label="Select <%= s.name %>">Select</a><% } else { %><span class="btn disabled" aria-disabled="true" id="select-store-<%= s.id %>">No parts</span><% } %></td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+<%- include('../partials/foot') %>

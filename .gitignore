@@ -1,0 +1,4 @@
+decagon/.venv/
+decagon/shots/
+portals/node_modules/
+.DS_Store

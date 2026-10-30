@@ -1,0 +1,25 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/scheduler/search">Home</a> &rsaquo; Find Repair Location</div>
+<h1>Find Repair Location</h1>
+<div class="panel">
+  <div class="ph">Search Parameters</div>
+  <div class="pb">
+    <% if (error) { %><div class="msg error" id="search-error" role="alert"><%= error %></div><% } %>
+    <form class="legacy" method="post" action="/scheduler/search" id="store-search-form">
+      <table class="form">
+        <tr><td class="lbl"><label for="zip">Customer ZIP Code <span class="req">*</span></label></td>
+            <td><input type="text" id="zip" name="zip" value="<%= form.zip %>" maxlength="5" aria-label="Customer ZIP Code" autofocus style="width:90px"> <span class="hint">5 digits</span></td></tr>
+        <tr><td class="lbl"><label for="device_model">Device Model <span class="req">*</span></label></td>
+            <td><input type="text" id="device_model" name="device_model" value="<%= form.device_model %>" list="device-models" aria-label="Device Model" placeholder="e.g. iPhone 15 Pro">
+                <datalist id="device-models"><% DEVICE_MODELS.forEach(m => { %><option value="<%= m %>"><% }) %></datalist>
+                <div class="hint">Must match a model in the parts catalog.</div></td></tr>
+        <tr><td class="lbl"><label for="repair_type">Repair Type <span class="req">*</span></label></td>
+            <td><select id="repair_type" name="repair_type" aria-label="Repair Type"><% REPAIR_TYPES.forEach(r => { %><option value="<%= r %>" <%= form.repair_type === r ? 'selected' : '' %>><%= r %></option><% }) %></select></td></tr>
+        <tr><td class="lbl"><label for="radius">Search Radius</label></td>
+            <td><select id="radius" name="radius" aria-label="Search Radius"><option>25 miles</option><option>50 miles</option></select></td></tr>
+        <tr><td></td><td><button type="submit" class="primary" id="search-submit" name="search-submit" aria-label="Search Locations">Search Locations</button> <button type="reset">Clear</button></td></tr>
+      </table>
+    </form>
+  </div>
+</div>
+<%- include('../partials/foot') %>

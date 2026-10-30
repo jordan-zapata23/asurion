@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+<% const ok = claim.status === 'Approved'; %>
+<div class="crumbs"><a href="/claims/dashboard">Home</a> &rsaquo; <a href="/claims/new">New Claim</a> &rsaquo; Confirmation</div>
+<h1>Claim Submitted</h1>
+<div class="steps"><span>1. Subscriber Lookup</span><span>2. Loss Details</span><span class="on">3. Confirmation</span></div>
+<div class="msg <%= ok ? 'ok' : 'warn' %>" id="confirmation-banner"><%= ok ? 'Claim auto-approved. Customer may proceed to an authorized repair location.' : 'Claim received and routed to adjuster queue. Customer will be contacted within 1 business day.' %></div>
+<div class="cols">
+  <div class="panel" id="claim-summary-panel">
+    <div class="ph">Claim Summary</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Claim #</th><td><span class="huge" id="claim-number"><%= claim.claimNumber %></span></td></tr>
+        <tr><th>Status</th><td><span class="pill <%= ok ? 'ok' : 'warn' %> big" id="claim-status"><%= claim.status %></span></td></tr>
+        <tr><th>Deductible Due</th><td class="big" id="deductible-due" data-amount="<%= claim.deductibleDue %>"><%= lib.money(claim.deductibleDue) %></td></tr>
+        <tr><th>Adjudication Note</th><td id="adjudication-reason"><%= claim.reason %></td></tr>
+        <tr><th>Fulfillment Path</th><td id="fulfillment"><%= claim.fulfillment %></td></tr>
+        <tr><th>Filed</th><td id="filed-at"><%= lib.fmtTs(claim.filedAt) %> CT by <%= claim.filedBy %></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel" id="claim-detail-panel">
+    <div class="ph">Loss Details</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Subscriber</th><td id="claim-subscriber"><%= claim.subscriberName %> (<%= claim.subscriberId %>)</td></tr>
+        <tr><th>Mobile</th><td class="mono"><%= lib.fmtPhone(claim.mobile) %></td></tr>
+        <tr><th>Carrier / Plan</th><td><%= claim.carrier %> / <%= claim.plan || 'None' %></td></tr>
+        <tr><th>Loss Type</th><td id="claim-loss-type"><%= claim.lossType %></td></tr>
+        <tr><th>Date of Incident</th><td id="claim-incident-date"><%= claim.incidentDate %></td></tr>
+        <tr><th>IMEI</th><td id="claim-imei" class="mono"><%= claim.imei %></td></tr>
+        <tr><th>Description</th><td id="claim-description"><%= claim.description %></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<p><a href="/claims/new" class="btn primary" id="file-another">File Another Claim</a> <a href="/claims/dashboard" class="btn">Work Queue</a></p>
+<%- include('../partials/foot') %>

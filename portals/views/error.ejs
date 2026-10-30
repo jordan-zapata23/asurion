@@ -1,0 +1,9 @@
+<%- include('partials/head', { pageTitle: 'Error ' + code }) %>
+<div class="panel">
+  <div class="ph">System Message</div>
+  <div class="pb">
+    <div class="msg error" id="error-message">Error <%= code %>: <%= message %></div>
+    <a href="javascript:history.back()" class="btn">&laquo; Back</a> <a href="/" class="btn">Portal Gateway</a>
+  </div>
+</div>
+<%- include('partials/foot') %>

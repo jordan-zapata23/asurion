@@ -1,0 +1,19 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/claims/dashboard">Home</a> &rsaquo; New Claim</div>
+<h1>New Claim</h1>
+<div class="steps"><span class="on">1. Subscriber Lookup</span><span>2. Loss Details</span><span>3. Confirmation</span></div>
+<div class="panel">
+  <div class="ph">Step 1 of 2 &mdash; Identify Subscriber</div>
+  <div class="pb">
+    <% if (error) { %><div class="msg error" id="lookup-error" role="alert"><%= error %></div><% } %>
+    <form class="legacy" method="post" action="/claims/new" id="claim-lookup-form">
+      <table class="form">
+        <tr><td class="lbl"><label for="mobile_number">Subscriber Mobile Number <span class="req">*</span></label></td>
+            <td><input type="tel" id="mobile_number" name="mobile_number" value="<%= mobile_number %>" aria-label="Subscriber Mobile Number" autofocus></td></tr>
+        <tr><td class="lbl"><label for="lookup_source">Source</label></td><td><select id="lookup_source" name="lookup_source" aria-label="Source"><option>Carrier Enrollment Feed</option><option>Manual Entry</option></select></td></tr>
+        <tr><td></td><td><button type="submit" class="primary" id="lookup-submit" name="lookup-submit" aria-label="Look Up Subscriber">Look Up &rsaquo;</button> <a href="/claims/dashboard" class="btn">Cancel</a></td></tr>
+      </table>
+    </form>
+  </div>
+</div>
+<%- include('../partials/foot') %>

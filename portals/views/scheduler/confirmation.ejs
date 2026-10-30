@@ -1,0 +1,33 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/scheduler/search">Home</a> &rsaquo; Book &rsaquo; Confirmation</div>
+<h1>Appointment Confirmed</h1>
+<div class="msg ok" id="confirmation-banner">Appointment booked. A confirmation SMS has been queued to the customer.</div>
+<div class="cols">
+  <div class="panel" id="booking-panel">
+    <div class="ph">Booking</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Booking Reference</th><td><span class="huge" id="booking-ref"><%= booking.ref %></span></td></tr>
+        <tr><th>Appointment</th><td class="big" id="appointment-time" data-slot="<%= booking.slotValue %>"><%= booking.slotLabel %></td></tr>
+        <tr><th>Store</th><td id="store-name"><b><%= booking.storeName %></b></td></tr>
+        <tr><th>Address</th><td id="store-address"><%= booking.address %></td></tr>
+        <tr><th>Store Phone</th><td id="store-phone"><%= booking.phone %></td></tr>
+        <tr><th>Service</th><td id="service"><%= booking.repairType %> &mdash; <%= booking.model %></td></tr>
+        <tr><th>Claim #</th><td id="claim-number" class="mono"><%= booking.claimNumber %></td></tr>
+        <tr><th>Customer</th><td id="customer-name"><%= booking.customerName %></td></tr>
+        <tr><th>Booked</th><td><%= lib.fmtTs(booking.bookedAt) %> CT by <%= booking.bookedBy %></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel" id="bring-panel">
+    <div class="ph">What To Bring</div>
+    <div class="pb">
+      <ul id="what-to-bring" style="margin:0; padding-left:18px; line-height:1.7">
+        <% WHAT_TO_BRING.forEach(item => { %><li class="bring-item"><%= item %></li><% }) %>
+      </ul>
+      <p class="hint">Arrive 10 minutes early. Deductible is collected at the store at drop-off.</p>
+    </div>
+  </div>
+</div>
+<p><a href="/scheduler/search" class="btn primary" id="new-booking">New Booking</a></p>
+<%- include('../partials/foot') %>

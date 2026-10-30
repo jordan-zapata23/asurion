@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/">Portal Gateway</a> &rsaquo; Activity Log</div>
+<h1>Service Account Activity</h1>
+<% if (flash) { %><div class="msg ok"><%= flash %></div><% } %>
+<div class="panel">
+  <div class="ph">Filters <span class="tools"><form method="post" action="/admin/reset" style="display:inline"><button type="submit" id="reset-demo" onclick="return confirm('Reset all demo data to seed state?')">Reset demo data</button></form></span></div>
+  <div class="pb">
+    <a href="/admin/activity" class="btn <%= !filter ? 'primary' : '' %>">All</a>
+    <a href="/admin/activity?portal=enrollment" class="btn <%= filter === 'enrollment' ? 'primary' : '' %>">Enrollment</a>
+    <a href="/admin/activity?portal=claims" class="btn <%= filter === 'claims' ? 'primary' : '' %>">Claims</a>
+    <a href="/admin/activity?portal=scheduler" class="btn <%= filter === 'scheduler' ? 'primary' : '' %>">Scheduler</a>
+    <span class="hint" style="margin-left:12px">Showing <%= rows.length %> most recent events. Data resets on server restart.</span>
+  </div>
+</div>
+<div class="panel">
+  <div class="ph">Events</div>
+  <div class="pb">
+    <table class="grid" id="activity-table">
+      <tr><th>Timestamp (CT)</th><th>Portal</th><th>Account</th><th>Action</th><th>Detail</th><th>Source IP</th></tr>
+      <% if (!rows.length) { %><tr><td colspan="6" class="hint">No activity recorded.</td></tr><% } %>
+      <% rows.forEach(a => { %>
+      <tr class="activity-row">
+        <td class="mono"><%= lib.fmtTs(a.ts) %></td>
+        <td><%= a.portal %></td>
+        <td class="mono"><%= a.account %></td>
+        <td><span class="pill <%= /FAILED/.test(a.action) ? 'bad' : (/FILED|BOOKED/.test(a.action) ? 'ok' : 'muted') %>"><%= a.action %></span></td>
+        <td><%= a.detail %></td>
+        <td class="mono"><%= a.ip %></td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+<%- include('../partials/foot') %>

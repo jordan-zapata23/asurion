@@ -1,0 +1,17 @@
+{
+  "name": "protectco-legacy-portals",
+  "version": "1.0.0",
+  "description": "Three mock legacy back-office portals for the Decagon Browser Actions demo (Carrier Enrollment, Claims Adjudication, Repair Scheduler). Fake data only.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  }
+}

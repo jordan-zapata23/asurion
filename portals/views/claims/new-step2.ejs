@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+<div class="crumbs"><a href="/claims/dashboard">Home</a> &rsaquo; <a href="/claims/new">New Claim</a> &rsaquo; Loss Details</div>
+<h1>New Claim</h1>
+<div class="steps"><span>1. Subscriber Lookup</span><span class="on">2. Loss Details</span><span>3. Confirmation</span></div>
+<div class="cols">
+  <div class="panel" style="flex:0 0 340px">
+    <div class="ph">Subscriber (from enrollment feed)</div>
+    <div class="pb">
+      <table class="kv">
+        <tr><th>Name</th><td id="sub-name"><%= sub.name %></td></tr>
+        <tr><th>Mobile</th><td id="sub-mobile" class="mono"><%= lib.fmtPhone(sub.mobile) %></td></tr>
+        <tr><th>Carrier / Plan</th><td id="sub-plan"><%= sub.carrier %> / <%= sub.plan || 'None' %></td></tr>
+        <tr><th>Status</th><td><span class="pill <%= sub.status === 'Active' ? 'ok' : 'bad' %>" id="sub-status"><%= sub.status %></span></td></tr>
+        <tr><th>Enrolled Device</th><td id="sub-device"><%= sub.device.make %> <%= sub.device.model %></td></tr>
+        <tr><th>Enrolled IMEI</th><td id="sub-imei" class="mono"><%= sub.device.imei %></td></tr>
+        <tr><th>Claims (12 mo)</th><td id="sub-claims-12mo"><%= claims12.length %><%= plan ? ' of ' + plan.claimLimit + ' allowed' : '' %></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph">Step 2 of 2 &mdash; Loss Details</div>
+    <div class="pb">
+      <% if (error) { %><div class="msg error" id="claim-error" role="alert"><%= error %></div><% } %>
+      <form class="legacy" method="post" action="/claims/new/submit" id="claim-details-form">
+        <input type="hidden" name="subscriber_id" value="<%= sub.id %>">
+        <table class="form">
+          <tr><td class="lbl"><label for="loss_type">Loss Type <span class="req">*</span></label></td>
+              <td><select id="loss_type" name="loss_type" aria-label="Loss Type" required>
+                    <option value="">-- Select --</option>
+                    <% LOSS_TYPES.forEach(lt => { %><option value="<%= lt %>" <%= form.loss_type === lt ? 'selected' : '' %>><%= lt %><%= plan ? ' (deductible ' + lib.money(plan.deductibles[lt]) + ')' : '' %></option><% }) %>
+                  </select></td></tr>
+          <tr><td class="lbl"><label for="incident_date">Date of Incident <span class="req">*</span></label></td>
+              <td><input type="date" id="incident_date" name="incident_date" value="<%= form.incident_date %>" max="<%= today %>" aria-label="Date of Incident" required> <span class="hint">YYYY-MM-DD</span></td></tr>
+          <tr><td class="lbl"><label for="description">Description of Loss <span class="req">*</span></label></td>
+              <td><textarea id="description" name="description" aria-label="Description of Loss" required><%= form.description %></textarea></td></tr>
+          <tr><td class="lbl"><label for="imei">Device IMEI <span class="req">*</span></label></td>
+              <td><input type="text" id="imei" name="imei" value="<%= form.imei %>" maxlength="16" aria-label="Device IMEI" required> <span class="hint">Must match enrolled IMEI for auto-adjudication</span></td></tr>
+          <tr><td class="lbl"><label for="contact_pref">Contact Preference</label></td>
+              <td><select id="contact_pref" name="contact_pref" aria-label="Contact Preference"><option>SMS</option><option>Email</option><option>Phone</option></select></td></tr>
+          <tr><td></td><td><button type="submit" class="primary" id="submit-claim" name="submit-claim" aria-label="Submit Claim">Submit Claim</button> <a href="/claims/new" class="btn">&laquo; Back</a></td></tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/foot') %>

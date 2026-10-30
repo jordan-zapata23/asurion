@@ -1,0 +1,42 @@
+<%
+  const p = (typeof portal !== 'undefined' && portal) ? portal : { key: 'home', name: 'Enterprise Portal Gateway', short: 'PCO', version: 'v1.0.4', theme: 'gray', home: '/' };
+  const u = (typeof user !== 'undefined') ? user : null;
+  const navs = {
+    enrollment: [['Subscriber Search', '/enrollment/search'], ['Enrollments', '#'], ['Billing', '#'], ['Reports', '#'], ['Help', '#']],
+    claims:     [['Work Queue', '/claims/dashboard'], ['New Claim', '/claims/new'], ['Claim Search', '#'], ['Adjuster Tools', '#'], ['Reports', '#']],
+    scheduler:  [['Find Location', '/scheduler/search'], ['Appointments', '#'], ['Store Directory', '#'], ['Parts Inventory', '#'], ['Help', '#']],
+    admin:      [['Activity Log', '/admin/activity'], ['Service Accounts', '#'], ['Portal Gateway', '/']],
+    home:       [['Portal Gateway', '/'], ['Activity Log', '/admin/activity']],
+  };
+  const nav = navs[p.key] || [];
+  const path = (typeof currentPath !== 'undefined') ? currentPath : '';
+%><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title><%= (typeof pageTitle !== 'undefined' && pageTitle) ? pageTitle + ' - ' : '' %><%= p.name %></title>
+<meta name="viewport" content="width=1024">
+<link rel="stylesheet" href="/static/legacy.css">
+</head>
+<body class="theme-<%= p.theme %>">
+<div class="topbar">
+  <span>ProtectCo Systems &raquo; <%= p.name %> <%= p.version %></span>
+  <span>
+    <% if (u) { %>Signed in as <b><%= u.toUpperCase() %></b> <a href="/<%= p.key %>/logout" id="logout-link">Sign out</a><% } else { %>Not signed in<% } %>
+    <a href="#" title="Help">Help</a>
+  </span>
+</div>
+<div class="brand">
+  <div class="logo">
+    <div class="mark"><%= p.short %></div>
+    <div><div class="title"><%= p.name %></div><div class="sub">ProtectCo Systems &middot; Internal Use Only &middot; Build <%= p.version %></div></div>
+  </div>
+  <div class="env">DEMO ENVIRONMENT - FICTIONAL DATA</div>
+</div>
+<% if (nav.length) { %>
+<div class="nav" role="navigation">
+  <% nav.forEach(([label, href]) => { %><a href="<%= href %>" <% if (href !== '#' && pageTitle && typeof pageTitle === 'string' && (pageTitle.indexOf(label.split(' ')[0]) === 0)) { %>class="active"<% } %>><%= label %></a><% }) %>
+</div>
+<% } %>
+<div class="notice">&#9888; Scheduled maintenance window Saturday 02:00&ndash;04:00 CT. Session timeout is 30 minutes. Do not share service account credentials.</div>
+<div class="wrap">

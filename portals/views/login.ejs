@@ -1,0 +1,21 @@
+<%- include('partials/head', { user: null }) %>
+<div class="login-wrap">
+  <div class="panel">
+    <div class="ph">Sign In &mdash; <%= portal.name %></div>
+    <div class="pb">
+      <% if (error) { %><div class="msg error" id="login-error" role="alert"><%= error %></div><% } %>
+      <form class="legacy" method="post" action="/<%= portal.key %>/login<%= (typeof nextUrl !== 'undefined' && nextUrl) ? '?next=' + encodeURIComponent(nextUrl) : '' %>" id="login-form" autocomplete="off">
+        <table class="form">
+          <tr><td class="lbl"><label for="username">User ID <span class="req">*</span></label></td>
+              <td><input type="text" id="username" name="username" value="<%= username %>" aria-label="User ID" autofocus required></td></tr>
+          <tr><td class="lbl"><label for="password">Password <span class="req">*</span></label></td>
+              <td><input type="password" id="password" name="password" aria-label="Password" required></td></tr>
+          <tr><td></td><td><button type="submit" class="primary" id="login-submit" name="login-submit" aria-label="Sign In">Sign In</button>
+              &nbsp;<a href="#" class="hint">Forgot password?</a></td></tr>
+        </table>
+      </form>
+    </div>
+  </div>
+  <div class="login-footer">Use your assigned service account. Three failed attempts will lock the account for 15 minutes.<br>By signing in you agree to the Acceptable Use Policy (rev. 2019-04).</div>
+</div>
+<%- include('partials/foot') %>
